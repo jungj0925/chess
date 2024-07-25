@@ -110,3 +110,45 @@ bool Pawn::validMove(Square& new_position, const Board& the_board) {
 char Pawn::getSymbol() const {
      return symbol;
 }
+
+std::vector<Square> Pawn::getPossibleMoves(const Board &the_board) {
+     auto old_coords = current_position->getCoordinates();
+     int direction = (islower(getSymbol()) ? -1 : 1);
+
+     int old_x = old_coords.first;
+     int old_y = old_coords.second;
+
+     vector<Square> possible_moves;
+
+     if (inBounds(old_x, old_y + 1 * direction)) {
+          if (!the_board.getSquare(old_x, old_y + 1 * direction).isOccupied()) {
+               possible_moves.emplace_back(Square(old_x, old_y + direction));
+               if (inBounds(old_x, old_y + 2 * direction)) {
+                    if (first_move && !the_board.getSquare(old_x, old_y + 2 * direction).isOccupied()) {
+                         possible_moves.emplace_back(Square(old_x, old_y + 2 * direction));
+                    }
+               }
+
+          }
+     }
+
+
+     // Capturing
+     int directions[2] = {1, -1};
+
+     for (int dir : directions) {
+          int target_x = old_x + direction * dir;
+          int target_y = old_y + direction;
+
+          // Check if the target coordinates are within bounds
+          if (target_x >= 0 && target_x < 8 && target_y >= 0 && target_y < 8) {
+               // Check if the target square is occupied
+               if (the_board.getSquare(target_x, target_y).isOccupied()) {
+                    // Check if the piece on the target square is an opponent's piece
+                    if (islower(the_board.getSquare(target_x, target_y).getPiece()->getSymbol()) != islower(symbol)) {
+                         possible_moves.emplace_back(Square(target_x, target_y));
+                    }
+               }
+          }   
+     }
+}

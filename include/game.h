@@ -11,7 +11,7 @@
 
 class Player;
 
-using namespace std;
+// using namespace std;
 
 class Game { 
      Board* board;

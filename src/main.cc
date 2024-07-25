@@ -49,13 +49,22 @@ int main() {
           
           
           else if (command == "move") {
-               // if (game != nullptr && !game->isGameOver()) {
                if (game != nullptr) {
                     Player* currentPlayer = game->getCurrentPlayer();
-                    if (currentPlayer->getType() == PlayerType::HUMAN) {
+                    
+                    if (currentPlayer->getType() == PlayerType::HUMAN && cout << "Its in here" << endl) {
                          if (!currentPlayer->makeMove(game, game->getBoard2(), isWhiteTurn)) {
                               continue;
                          } else {
+                              game->changeTurns();
+                              isWhiteTurn = !isWhiteTurn;
+                         }
+                    } else if (currentPlayer->getType() == PlayerType::COMPUTER1) {
+                         if (!currentPlayer->makeMove(game, game->getBoard2(), isWhiteTurn)) {
+                              cout << "Stuck here" << endl;
+                              continue;
+                         } else {
+                              game->changeTurns();
                               isWhiteTurn = !isWhiteTurn;
                          }
                     }

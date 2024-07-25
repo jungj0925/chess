@@ -494,3 +494,23 @@ pair<vector<char>, vector<char>> Board::getCapturedPieces() const {
 
     return make_pair(white_captured_pieces, black_captured_pieces);
 }
+
+
+std::vector<Move> Board::getPossibleMoves(bool isWhiteTurn) {
+    std::vector<Move> result;
+    for (int x = 0; x < 8; ++x) {
+        for (int y = 0; y < 8; ++y) {
+            Square& square = getSquare(x, y);
+            Piece* piece = square.getPiece();
+            if (piece && (islower(piece->getSymbol()) == isWhiteTurn)) {
+                std::vector<Square> possibleSquares = piece->getPossibleMoves(*this);
+                for (Square& toSquare : possibleSquares) {
+
+                    result.emplace_back(&square, &toSquare, piece, *this);
+                    cout << "EMPLACING BACK" << endl;
+                }
+            }
+        }
+    }
+    return result;
+}

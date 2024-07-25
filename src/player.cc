@@ -7,8 +7,10 @@ Player::Player(const string& name, const string& colour)
     : name(name), colour(colour) {
     if (name == "human") {
         type = PlayerType::HUMAN;
+        cout << "human init." << endl;
     } else if (name == "computer1") {
         type = PlayerType::COMPUTER1;
+        cout << "computer init." << endl;
     } else if (name == "computer2") {
         type = PlayerType::COMPUTER2;
     } else if (name == "computer3") {
@@ -32,10 +34,10 @@ bool Player::makeMove(Game* game, Board& board, bool isWhiteTurn) {
     switch (type) {
         case PlayerType::HUMAN:
             return humanMove(game, board, isWhiteTurn);
-        // case PlayerType::COMPUTER1: {
-        //     Move computerMove = computer1Move(board);
-        //     return board.movePiece(computerMove);
-        // }
+        case PlayerType::COMPUTER1: {
+            cout << "In switch case" << endl;
+            return computer1Move(game, board, isWhiteTurn);
+        }
         // case PlayerType::COMPUTER2: {
         //     Move computerMove = computer2Move(board);
         //     return board.movePiece(computerMove);
@@ -48,8 +50,8 @@ bool Player::makeMove(Game* game, Board& board, bool isWhiteTurn) {
         //     Move computerMove = computer4Move(board);
         //     return board.movePiece(computerMove);
         // }
-        // default:
-        //     return false;
+        default:
+            return false;
     }
 }
 
@@ -110,19 +112,45 @@ bool Player::humanMove(Game* game, Board& board, bool isWhiteTurn) {
         game->getBoardModifiable()->pawnGettingPromoted(!isWhiteTurn);
         return true;
     }
+    return false;
 }
 
-// Move Player::computer1Move(Board& board) {
-//     // Simple random move logic
-//     srand(static_cast<unsigned>(time(0)));
-//     vector<Move> legalMoves = board.getAllLegalMoves(colour);
-//     if (!legalMoves.empty()) {
-//         int randomIndex = rand() % legalMoves.size();
-//         return legalMoves[randomIndex];
-//     }
-//     // Return a dummy move if no legal moves available
-//     return Move();
-// }
+bool Player::computer1Move(Game* game, Board& board, bool isWhiteTurn) {
+    cout << "In first" << endl;
+
+    vector<Move> possible_moves = board.getPossibleMoves(isWhiteTurn);
+
+    cout << "FOUND POSSIBLE MOVES" << endl;
+
+
+    if (possible_moves.empty()) {
+        cout << "No way it's empty" << endl;
+        return false; // No valid moves
+    }
+
+    // Select a random move
+    Move move = possible_moves[rand() % possible_moves.size()];
+    if (game->makeMove(move)) {
+        // After making the move, check for check or checkmate
+        bool king_in_check = game->getBoard().isCheck(isWhiteTurn);
+        bool king_in_checkmate;
+
+        if (king_in_check) {
+            king_in_checkmate = game->getBoard().isCheckmate(isWhiteTurn);
+            if (isWhiteTurn) {
+                cout << "The white king is in check!" << endl;
+                if (king_in_checkmate) cout << "The white king is in checkmate" << endl;
+            } else {
+                cout << "The black king is in check!" << endl;
+                if (king_in_checkmate) cout << "The black king is in checkmate" << endl;
+            }
+        }
+        // Update promotion if needed
+        game->getBoardModifiable()->pawnGettingPromoted(!isWhiteTurn);
+        return true;
+    }
+    return false;
+}
 
 // Move Player::computer2Move(Board& board) {
 //     // Slightly more advanced logic than ComputerPlayer1

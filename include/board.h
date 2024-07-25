@@ -52,6 +52,8 @@ class Board : public Subject {
           bool isPresent(const vector<char> &vec, char value);
 
           string coordinatesToPosition(int x, int y);
+
+          vector<Move> getPossibleMoves(bool isWhiteTurn);
 };
 
 #endif

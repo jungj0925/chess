@@ -37,6 +37,8 @@ class Piece {
                if (current_position == nullptr) cout << "CURRENT POS IS NULL" << endl;
                return current_position;
           }
+
+          virtual vector<Square> getPossibleMoves(const Board& board) = 0;
 };
 
 #endif

@@ -29,7 +29,7 @@ public:
 
 private:
     bool humanMove(Game* game, Board& board, bool isWhiteTurn);
-    Move computer1Move(Board& board); // computermove is not bool cause we trust them 
+    bool computer1Move(Game* game, Board& board, bool isWhiteTurn);
     Move computer2Move(Board& board);
     Move computer3Move(Board& board);
     Move computer4Move(Board& board);
