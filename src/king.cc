@@ -1,4 +1,4 @@
-#include "../include/king.h"
+#include "king.h"
 #include "board.h"
 
 using namespace std;

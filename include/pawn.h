@@ -18,6 +18,8 @@ class Pawn : public Piece {
           void setFirstMove(bool status) override {
                first_move = status;
           }
+
+          vector<Square> getPossibleMoves(const Board &the_board);
 };
 
 #endif

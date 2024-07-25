@@ -20,6 +20,8 @@ class Rook : public Piece {
           bool getIsFirstMove() {
                return first_move;
           }
+
+          vector<Square> getPossibleMoves(const Board &the_board);
 };
 
 #endif

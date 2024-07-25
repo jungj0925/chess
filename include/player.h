@@ -3,8 +3,12 @@
 
 #include "piece.h"
 #include "board.h"
+#include "game.h"
+#include "move.h"  // Include the Move header file
 #include <string>
 #include <vector>
+
+class Game;
 
 using namespace std;
 
@@ -21,7 +25,14 @@ public:
     ~Player() {};
     string& getColour();
     PlayerType getType() const;
-    bool makeMove(Move& move, Board& board);
+    bool makeMove(Game* game, Board& board, bool isWhiteTurn);
+
+private:
+    bool humanMove(Game* game, Board& board, bool isWhiteTurn);
+    bool computer1Move(Game* game, Board& board, bool isWhiteTurn);
+    Move computer2Move(Board& board);
+    Move computer3Move(Board& board);
+    Move computer4Move(Board& board);
 };
 
 #endif

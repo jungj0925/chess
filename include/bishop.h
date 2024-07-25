@@ -9,6 +9,8 @@ class Bishop : public Piece {
           void move(Square *new_position, const Board &the_board) override;
           char getSymbol() const override;
           bool validMove(Square &new_position, const Board &the_board) override;
+
+          vector<Square> getPossibleMoves(const Board &the_board);
 };
 
 #endif
