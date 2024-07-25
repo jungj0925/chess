@@ -105,3 +105,7 @@ bool Bishop::validMove(Square& new_position, const Board& the_board) {
 char Bishop::getSymbol() const {
      return symbol;
 }
+
+vector<Square> Bishop::getPossibleMoves(const Board &the_board) {
+
+}
