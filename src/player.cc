@@ -115,6 +115,8 @@ bool Player::humanMove(Game* game, Board& board, bool isWhiteTurn) {
     return false;
 }
 
+
+// HELLO ANDY JUNG
 bool Player::computer1Move(Game* game, Board& board, bool isWhiteTurn) {
     cout << "In first" << endl;
 
