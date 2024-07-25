@@ -3,10 +3,12 @@
 
 #include "piece.h"
 #include "board.h"
+#include "game.h"
 #include "move.h"  // Include the Move header file
 #include <string>
 #include <vector>
 
+class Game;
 
 using namespace std;
 
@@ -23,10 +25,10 @@ public:
     ~Player() {};
     string& getColour();
     PlayerType getType() const;
-    bool makeMove(Move& move, Board& board);
+    bool makeMove(Game* game, Board& board, bool isWhiteTurn);
 
 private:
-    bool humanMove(Move& move, Board& board);
+    bool humanMove(Game* game, Board& board, bool isWhiteTurn);
     Move computer1Move(Board& board); // computermove is not bool cause we trust them 
     Move computer2Move(Board& board);
     Move computer3Move(Board& board);

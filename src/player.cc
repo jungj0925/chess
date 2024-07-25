@@ -28,96 +28,132 @@ PlayerType Player::getType() const {
     return type;
 }
 
-bool Player::makeMove(Move& move, Board& board) {
+bool Player::makeMove(Game* game, Board& board, bool isWhiteTurn) {
     switch (type) {
         case PlayerType::HUMAN:
-            return humanMove(move, board);
-        case PlayerType::COMPUTER1: {
-            Move computerMove = computer1Move(board);
-            return board.movePiece(computerMove);
-        }
-        case PlayerType::COMPUTER2: {
-            Move computerMove = computer2Move(board);
-            return board.movePiece(computerMove);
-        }
-        case PlayerType::COMPUTER3: {
-            Move computerMove = computer3Move(board);
-            return board.movePiece(computerMove);
-        }
-        case PlayerType::COMPUTER4: {
-            Move computerMove = computer4Move(board);
-            return board.movePiece(computerMove);
-        }
-        default:
-            return false;
+            return humanMove(game, board, isWhiteTurn);
+        // case PlayerType::COMPUTER1: {
+        //     Move computerMove = computer1Move(board);
+        //     return board.movePiece(computerMove);
+        // }
+        // case PlayerType::COMPUTER2: {
+        //     Move computerMove = computer2Move(board);
+        //     return board.movePiece(computerMove);
+        // }
+        // case PlayerType::COMPUTER3: {
+        //     Move computerMove = computer3Move(board);
+        //     return board.movePiece(computerMove);
+        // }
+        // case PlayerType::COMPUTER4: {
+        //     Move computerMove = computer4Move(board);
+        //     return board.movePiece(computerMove);
+        // }
+        // default:
+        //     return false;
     }
 }
 
-bool Player::humanMove(Move& move, Board& board) {
-    Square* fromSquare = move.getStartingCoord();
-    Square* toSquare = move.getDestinationCoord();
+bool Player::humanMove(Game* game, Board& board, bool isWhiteTurn) {
+    string from, to, promotionPiece;
+    cin >> from >> to;
 
-    if (!fromSquare->isOccupied()) {
-        return false; // No piece to move
+    // Check for correct length of input
+    if (from.length() != 2 && to.length() != 2) {
+        cout << "Invalid coordinate given, try again" << endl;
+        return false;
+    }  
+
+    if (!('a' <= from[0] && from[0] <= 'h' && 
+            '1' <= from[1] && from[1] <= '8' && 
+            'a' <= to[0] && to[0] <= 'h' && 
+            '1' <= to[1] && to[1] <= '8')) {
+        cout << "Invalid coordinate given, try again" << endl;
+        return false;
     }
 
-    Piece* piece = fromSquare->getPiece();
-    if (piece->getColor() != colour) {
-        return false; // Not the player's piece
+
+    auto f = new Square(from, game->getBoard());
+    auto t = new Square(to, game->getBoard());
+
+    if (!f->getPiece()) {
+        cout << "No piece in square, try again" << endl;
+        return false;
     }
 
-    auto possible_moves = piece->possibleMoves(board);
-    for (const Move& possible_move : possible_moves) {
-        if (possible_move.equals(move)) {
-            return board.movePiece(move);
+    if ((!islower(f->getPiece()->getSymbol()) && !isWhiteTurn) || (islower(f->getPiece()->getSymbol() && isWhiteTurn))) {
+        cout << "It's not your turn rn" << endl;
+        return false;
+    }
+
+    cout << "You chose to move " << f->getPiece()->getSymbol() << endl;
+
+    Move m(f, t, f->getPiece(), game->getBoard());
+    if (game->makeMove(m)) {
+        isWhiteTurn = !isWhiteTurn;
+        bool king_in_check = game->getBoard().isCheck(isWhiteTurn);
+        bool king_in_checkmate;
+
+        if (king_in_check) {
+            king_in_checkmate = game->getBoard().isCheckmate(isWhiteTurn);
+            if (isWhiteTurn) {
+                cout << "The white king is in check!" << endl;
+
+                if (king_in_checkmate) cout << "The white king is in checkmate" << endl;
+            } else {
+                cout << "The black king is in check!" << endl;
+
+                if (king_in_checkmate) cout << "The black king is in checkmate" << endl;
+            }
         }
-    }
 
-    return false; // Move is not valid
+        // TESTING
+        game->getBoardModifiable()->pawnGettingPromoted(!isWhiteTurn);
+        return true;
+    }
 }
 
-Move Player::computer1Move(Board& board) {
-    // Simple random move logic
-    srand(static_cast<unsigned>(time(0)));
-    vector<Move> legalMoves = board.getAllLegalMoves(colour);
-    if (!legalMoves.empty()) {
-        int randomIndex = rand() % legalMoves.size();
-        return legalMoves[randomIndex];
-    }
-    // Return a dummy move if no legal moves available
-    return Move();
-}
+// Move Player::computer1Move(Board& board) {
+//     // Simple random move logic
+//     srand(static_cast<unsigned>(time(0)));
+//     vector<Move> legalMoves = board.getAllLegalMoves(colour);
+//     if (!legalMoves.empty()) {
+//         int randomIndex = rand() % legalMoves.size();
+//         return legalMoves[randomIndex];
+//     }
+//     // Return a dummy move if no legal moves available
+//     return Move();
+// }
 
-Move Player::computer2Move(Board& board) {
-    // Slightly more advanced logic than ComputerPlayer1
-    // Example: prioritize captures over random moves
-    srand(static_cast<unsigned>(time(0)));
-    vector<Move> legalMoves = board.getAllLegalMoves(colour);
-    vector<Move> captureMoves;
-    for (const auto& move : legalMoves) {
-        if (move.isCapture()) {
-            captureMoves.push_back(move);
-        }
-    }
-    if (!captureMoves.empty()) {
-        int randomIndex = rand() % captureMoves.size();
-        return captureMoves[randomIndex];
-    }
-    if (!legalMoves.empty()) {
-        int randomIndex = rand() % legalMoves.size();
-        return legalMoves[randomIndex];
-    }
-    return Move();
-}
+// Move Player::computer2Move(Board& board) {
+//     // Slightly more advanced logic than ComputerPlayer1
+//     // Example: prioritize captures over random moves
+//     srand(static_cast<unsigned>(time(0)));
+//     vector<Move> legalMoves = board.getAllLegalMoves(colour);
+//     vector<Move> captureMoves;
+//     for (const auto& move : legalMoves) {
+//         if (move.isCapture()) {
+//             captureMoves.push_back(move);
+//         }
+//     }
+//     if (!captureMoves.empty()) {
+//         int randomIndex = rand() % captureMoves.size();
+//         return captureMoves[randomIndex];
+//     }
+//     if (!legalMoves.empty()) {
+//         int randomIndex = rand() % legalMoves.size();
+//         return legalMoves[randomIndex];
+//     }
+//     return Move();
+// }
 
-Move Player::computer3Move(Board& board) {
-    // More advanced logic, such as simple heuristic evaluation
-    // Implement the logic here
-    return Move();
-}
+// Move Player::computer3Move(Board& board) {
+//     // More advanced logic, such as simple heuristic evaluation
+//     // Implement the logic here
+//     return Move();
+// }
 
-Move Player::computer4Move(Board& board) {
-    // Even more advanced logic, such as minimax algorithm with a certain depth
-    // Implement the logic here
-    return Move();
-}
+// Move Player::computer4Move(Board& board) {
+//     // Even more advanced logic, such as minimax algorithm with a certain depth
+//     // Implement the logic here
+//     return Move();
+// }

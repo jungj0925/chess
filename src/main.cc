@@ -51,92 +51,13 @@ int main() {
           else if (command == "move") {
                // if (game != nullptr && !game->isGameOver()) {
                if (game != nullptr) {
-                    string from, to, promotionPiece;
-                    cin >> from >> to;
-
-                    // Check for correct length of input
-                    if (from.length() != 2 && to.length() != 2) {
-                         cout << "Invalid coordinate given, try again" << endl;
-                         continue;
-                    }
-
-                    if (!('a' <= from[0] && from[0] <= 'h' && 
-                         '1' <= from[1] && from[1] <= '8' && 
-                         'a' <= to[0] && to[0] <= 'h' && 
-                         '1' <= to[1] && to[1] <= '8')) {
-                         cout << "Invalid coordinate given, try again" << endl;
-                         continue;
-                    }
-
-
-                    auto f = new Square(from, game->getBoard());
-                    auto t = new Square(to, game->getBoard());
-
-                    if (!f->getPiece()) {
-                         cout << "No piece in square, try again" << endl;
-                         continue;
-                    }
-
-                    if ((!islower(f->getPiece()->getSymbol()) && !isWhiteTurn) || (islower(f->getPiece()->getSymbol() && isWhiteTurn))) {
-                         cout << "It's not your turn rn" << endl;
-                         continue;
-                    }
-
-                    cout << "You chose to move " << f->getPiece()->getSymbol() << endl;
-
-                    Move m(f, t, f->getPiece(), game->getBoard());
-                    // if (cin.peek() != '\n') {
-                    //      cin >> promotionPiece;
-                    //      m.setPromotionPiece(promotionPiece[0]);
-                    // }
-                    if (game->makeMove(m)) {
-                         isWhiteTurn = !isWhiteTurn;
-                         // Board &b = game->getBoard2();
-                         // bool x = b.isCheck(true);
-
-                         // Check for check
-                         bool king_in_check = game->getBoard().isCheck(isWhiteTurn);
-                         bool king_in_checkmate;
-
-                         if (king_in_check) {
-                              king_in_checkmate = game->getBoard().isCheckmate(isWhiteTurn);
-                              if (isWhiteTurn) {
-                                   cout << "The white king is in check!" << endl;
-
-                                   if (king_in_checkmate) cout << "The white king is in checkmate" << endl;
-                              } else {
-                                   cout << "The black king is in check!" << endl;
-
-                                   if (king_in_checkmate) cout << "The black king is in checkmate" << endl;
-                              }
-
-                              // // Check if king was captured
-                              // bool white_king_free = false;
-                              // bool black_king_free = false;
-                              // auto game_board = game->getBoard();
-                              // for (int col = 0; col < 8; ++col) {
-                              //      for (int row = 0; row < 8; ++row) {
-                              //           Square &current_square = game_board.getSquare(col, row);
-                              //           Piece *piece = current_square.getPiece();
-
-                              //           // Check for a valid piece
-                              //           if (piece != nullptr ) {
-                              //                if (piece->getSymbol() == 'K') white_king_free = true;
-                              //                if (piece->getSymbol() == 'k') black_king_free = true;
-                              //           }
-                              //      }
-                              // }
-
-                              // if (!white_king_free) {
-                              //      cout << "WHITE KING HAS BEEN Captured" << endl;
-                              // } else if (!black_king_free) {
-                              //      cout << "BLACK KING HAS BEEN Captured" << endl;
-                              // }
+                    Player* currentPlayer = game->getCurrentPlayer();
+                    if (currentPlayer->getType() == PlayerType::HUMAN) {
+                         if (!currentPlayer->makeMove(game, game->getBoard2(), isWhiteTurn)) {
+                              continue;
+                         } else {
+                              isWhiteTurn = !isWhiteTurn;
                          }
-
-                         // TESTING
-                         game->getBoardModifiable()->pawnGettingPromoted(!isWhiteTurn);
-
                     }
                     cout << "It is " << (isWhiteTurn ? "white's" : "black's") << " turn" << endl;
                     game->getBoard().display();

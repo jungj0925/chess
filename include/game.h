@@ -9,11 +9,15 @@
 #include "player.h"
 #include "move.h"
 
+class Player;
+
 using namespace std;
 
 class Game { 
      Board* board;
      Player* currentplayer;
+     Player* blackplayer;
+     Player* whiteplayer;
      Piece* whiteKing;
      Piece* blackKing;
 
@@ -26,12 +30,14 @@ class Game {
           bool isMoveLegal(Square* start, Square* end, const std::string& colour);
           bool isGameOver();
 
-          Player& getCurrentPlayer();
+          Player* getCurrentPlayer();
           const Board& getBoard();
 
           Board& getBoard2() {
                return *board;
           }
+
+          void changeTurns();
 
           Board* getBoardModifiable();
           bool makeMove(Move& move);
