@@ -242,11 +242,40 @@ bool Player::computer2Move(Game* game, Board& board, bool isWhiteTurn) {
 
 
 bool Player::computer3Move(Game* game, Board& board, bool isWhiteTurn) {
-    // Example: Move that captures the highest value piece
-    vector<Move> possible_moves = board.getPossibleMoves(isWhiteTurn);
+    std::vector<Move> possible_moves = board.getPossibleMoves(isWhiteTurn);
     if (possible_moves.empty()) {
         return false;
     }
+
+    // Seed the random number generator
+    std::srand(std::time(nullptr));
+
+    // 30% chance to choose a random move
+    if (std::rand() % 100 < 40) {
+        Move move = possible_moves[std::rand() % possible_moves.size()];
+        if (game->makeMove(move)) {
+            // After making the move, check for check or checkmate
+            bool king_in_check = game->getBoard().isCheck(isWhiteTurn);
+            bool king_in_checkmate;
+
+            if (king_in_check) {
+                king_in_checkmate = game->getBoard().isCheckmate(isWhiteTurn);
+                if (isWhiteTurn) {
+                    std::cout << "The white king is in check!" << std::endl;
+                    if (king_in_checkmate) std::cout << "The white king is in checkmate" << std::endl;
+                } else {
+                    std::cout << "The black king is in check!" << std::endl;
+                    if (king_in_checkmate) std::cout << "The black king is in checkmate" << std::endl;
+                }
+            }
+            // Update promotion if needed
+            game->getBoardModifiable()->pawnGettingPromoted(!isWhiteTurn);
+            return true;
+        }
+        return false;
+    }
+
+    // If not a random move, find the best move as usual
     Move best_move = possible_moves[0];  // Initialize with the first move
     int best_value = -9999;
     for (const Move& move : possible_moves) {
@@ -265,11 +294,11 @@ bool Player::computer3Move(Game* game, Board& board, bool isWhiteTurn) {
         if (king_in_check) {
             king_in_checkmate = game->getBoard().isCheckmate(isWhiteTurn);
             if (isWhiteTurn) {
-                cout << "The white king is in check!" << endl;
-                if (king_in_checkmate) cout << "The white king is in checkmate" << endl;
+                std::cout << "The white king is in check!" << std::endl;
+                if (king_in_checkmate) std::cout << "The white king is in checkmate" << std::endl;
             } else {
-                cout << "The black king is in check!" << endl;
-                if (king_in_checkmate) cout << "The black king is in checkmate" << endl;
+                std::cout << "The black king is in check!" << std::endl;
+                if (king_in_checkmate) std::cout << "The black king is in checkmate" << std::endl;
             }
         }
         // Update promotion if needed
@@ -302,11 +331,18 @@ bool Player::computer4Move(Game* game, Board& board, bool isWhiteTurn) {
         return false; // No valid moves
     }
 
+    // Seed the random number generator
+    std::srand(std::time(nullptr));
+
     Move move = possible_moves[0];  // Initialize with the first move
 
     bool move_found = false;
 
-    if (isWhiteTurn && white_move_index < white_opening_moves.size()) {
+    // Random probability for choosing opening move or random move
+    int chance = std::rand() % 100;
+
+    if (isWhiteTurn && white_move_index < white_opening_moves.size() && chance < 30) {
+        // 30% chance to use opening move
         auto [from, to] = white_opening_moves[white_move_index];
         Square* from_square = &board.getSquare(from.first, from.second);
         Square* to_square = &board.getSquare(to.first, to.second);
@@ -322,7 +358,8 @@ bool Player::computer4Move(Game* game, Board& board, bool isWhiteTurn) {
                 break;
             }
         }
-    } else if (!isWhiteTurn && black_move_index < black_opening_moves.size()) {
+    } else if (!isWhiteTurn && black_move_index < black_opening_moves.size() && chance < 30) {
+        // 30% chance to use opening move
         auto [from, to] = black_opening_moves[black_move_index];
         Square* from_square = &board.getSquare(from.first, from.second);
         Square* to_square = &board.getSquare(to.first, to.second);
@@ -338,9 +375,14 @@ bool Player::computer4Move(Game* game, Board& board, bool isWhiteTurn) {
                 break;
             }
         }
+    } else if (chance < 50) {
+        // 20% chance to choose a random move
+        move = possible_moves[std::rand() % possible_moves.size()];
+        move_found = true;
     }
 
     if (!move_found) {
+        // 50% chance to choose the best move
         int best_value = -9999;
         for (const Move& m : possible_moves) {
             int move_value = evaluateMove(board, m);
@@ -350,6 +392,7 @@ bool Player::computer4Move(Game* game, Board& board, bool isWhiteTurn) {
             }
         }
     }
+
     if (game->makeMove(move)) {
         // After making the move, check for check or checkmate
         bool king_in_check = game->getBoard().isCheck(isWhiteTurn);
