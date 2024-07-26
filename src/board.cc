@@ -4,6 +4,8 @@
 // col = x
 // row = y
 
+using namespace std;
+
 Board::Board() : the_board(8, vector<Square *>(8, nullptr)) {
     // Init all the Squares
     for (int row = 0; row < 8; ++row) {
@@ -498,6 +500,7 @@ pair<vector<char>, vector<char>> Board::getCapturedPieces() const {
 
 std::vector<Move> Board::getPossibleMoves(bool isWhiteTurn) {
     std::vector<Move> result;
+    // Move move;
 
     // Iterate through each square on the board
     for (int x = 0; x < 8; ++x) {
@@ -516,10 +519,25 @@ std::vector<Move> Board::getPossibleMoves(bool isWhiteTurn) {
                 // Iterate through each possible destination square
                 for (Square& toSquare : possibleSquares) {
                     // Construct a move and add it to the result vector
-                    result.emplace_back(&square, &toSquare, piece, *this);
+                    auto from_coords = square.getCoordinates();
+                    auto to_coords = toSquare.getCoordinates();
+
+                    Move m(from_coords, to_coords, piece, *this);
+
+                    cout << "INSIDE EACH DES SQ" << endl;
+                    cout << "(" << m.getFromCoordinates().first << ", " << m.getFromCoordinates().second << ")   ->   ";
+                    cout << "(" << m.getToCoordinates().first << ", " << m.getToCoordinates().second << ")" << endl;
+                    result.push_back(m);
+                    // result.emplace_back(&square, &toSquare, piece, *this);
                 }
             }
         }
+    }
+
+    cout << "TOTAL POSSIBLE MOVES: " << result.size() << endl;
+    for (auto m : result) {
+        cout << "(" << m.getFromCoordinates().first << ", " << m.getFromCoordinates().second << ")   ->   ";
+        cout << "(" << m.getToCoordinates().first << ", " << m.getToCoordinates().second << ")" << endl;
     }
 
     return result;

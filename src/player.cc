@@ -129,8 +129,18 @@ bool Player::computer1Move(Game* game, Board& board, bool isWhiteTurn) {
         return false; // No valid moves
     }
 
+    // Possible moves
+    // cout << "TOTAL POSSIBLE MOVES: " << possible_moves.size() << endl;
+    // for (auto move : possible_moves) {
+
+    //     cout << "(" << move.getStartingCoord()->getCoordinates().first << ", " << move.getStartingCoord()->getCoordinates().second << ")   ->   ";
+    //     cout << "(" << move.getDestinationCoord()->getCoordinates().first << ", " << move.getDestinationCoord()->getCoordinates().second << ")" << endl;
+    // }
+
     // Select a random move
     Move move = possible_moves[rand() % possible_moves.size()];
+    
+    // ERROR POINT
     if (game->makeMove(move)) {
         // After making the move, check for check or checkmate
         bool king_in_check = game->getBoard().isCheck(isWhiteTurn);

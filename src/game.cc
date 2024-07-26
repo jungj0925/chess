@@ -61,11 +61,33 @@ bool Game::isWhiteTurn() {
 }
 
 bool Game::makeMove(Move& move) {
-    Square* fromSquare = move.getStartingCoord();
-    Square* toSquare = move.getDestinationCoord();
-    Piece* piece = fromSquare->getPiece();
-    if (piece && piece->validMove(*toSquare, *board)) {
-        piece->move(toSquare, *board);
+    // Check if the squares in move are nullptr
+    Square* from_square;
+    Square* to_square;
+    pair<int, int> from_coordinates;
+    pair<int, int> to_coordinates;
+
+
+    if (move.getStartingCoord() == nullptr) {
+        from_coordinates = move.getFromCoordinates();
+        to_coordinates = move.getToCoordinates();
+
+        from_square = &(board->getSquare(from_coordinates.first, from_coordinates.second));
+        to_square = &(board->getSquare(to_coordinates.first, to_coordinates.second));
+    } else {
+        from_square = move.getStartingCoord();
+        to_square = move.getDestinationCoord();
+    }
+
+    Piece *piece = from_square->getPiece();
+
+    if (!piece) {
+        cout << "Piece does NOT exixt" << endl;
+        cout << "(" << from_coordinates.first << ", " << from_coordinates.second << endl;
+    }
+
+    if (piece && piece->validMove(*to_square, *board)) {
+        piece->move(to_square, *board);
         // board->getSquare(toSquare->getCoordinates().first, toSquare->getCoordinates().second).setPiece(piece);
         // fromSquare->setPiece(nullptr);
     } else {
