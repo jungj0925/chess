@@ -33,6 +33,7 @@ private:
     bool computer1Move(Game* game, Board& board, bool isWhiteTurn);
     bool computer2Move(Game* game, Board& board, bool isWhiteTurn);
     bool computer3Move(Game* game, Board& board, bool isWhiteTurn);
+    bool computer4Move(Game* game, Board& board, bool isWhiteTurn);
 
     Move minimax(Game* game, Board& board, bool isWhiteTurn);
     vector<Move> generateAllPossibleMoves(Game* game, Board& board, bool isWhiteTurn);
@@ -40,8 +41,6 @@ private:
 
     int evaluateBoard(const Board& board, bool isWhiteTurn);
     int evaluateMove(const Board& board, const Move& move);
-
-    Move computer4Move(Board& board);
 };
 
 #endif
