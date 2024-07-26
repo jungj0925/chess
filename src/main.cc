@@ -3,7 +3,7 @@
 
 #include "game.h"
 #include "board.h"
-#include "player.h"
+#include "../include/player.h"
 #include "move.h"
 #include "square.h"
 
@@ -32,7 +32,9 @@ int main() {
                new_game_started = true;
                cout << "It is white's turn" << endl;
                game->getBoard().display();
-          } else if (command == "resign") {
+          } 
+          
+          else if (command == "resign") {
                if (game != nullptr) {
                     if (game->isWhiteTurn()) {
                          cout << "White resigns. Black wins!" << endl;
@@ -44,27 +46,49 @@ int main() {
                } else {
                     cout << "No game is currently running." << endl;
                }
-          } else if (command == "move") {
+          } 
+          
+          else if (command == "move") {
                if (game != nullptr) {
                     Player* currentPlayer = game->getCurrentPlayer();
-                    if (!currentPlayer->makeMove(game, game->getBoard2(), isWhiteTurn)) {
+
+                    pair<bool, bool> valid_move_and_checkmate = currentPlayer->makeMove(game, game->getBoard2(), isWhiteTurn);
+
+                    // Check for invalid move
+                    if (!valid_move_and_checkmate.first) {
                          continue;
-                    } else {
+                    }
+
+                    // Check for checkmate
+                    else if (valid_move_and_checkmate.second) {
+                         if (game->isWhiteTurn()) {
+                              cout << "Black is in checkmate. White wins!" << endl;
+                         }
+                         else {
+                              cout << "White is in checkmate. Black wins!" << endl;
+                         }
+                         delete game;
+                         game = nullptr;
+                    }
+                    
+                    else {
                          game->changeTurns();
                          isWhiteTurn = !isWhiteTurn;
+                         cout << "It is " << (isWhiteTurn ? "white's" : "black's") << " turn" << endl;
+                         game->getBoard().display();
                     }
-                    cout << "It is " << (isWhiteTurn ? "white's" : "black's") << " turn" << endl;
-                    game->getBoard().display();
-               }
-               else
-               {
+               } else {
                     cout << "No game is currently running." << endl;
                }
-          } else if (command == "render") {
+          } 
+          
+          else if (command == "render") {
                if (game != nullptr) {
                     game->getBoard().display();
                }
-          } else if (command == "captured_pieces") {
+          } 
+          
+          else if (command == "captured_pieces") {
                if (game != nullptr) {
                     pair<vector<char>, vector<char>> captured_pieces = game->getBoard().getCapturedPieces();
                     vector<char> white_captured_pieces = captured_pieces.first;

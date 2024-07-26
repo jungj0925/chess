@@ -261,50 +261,50 @@ bool Board::isCheckmate(bool isWhiteTurn) const {
     }
 
     // Check for any safe squares the king can move to
-    vector<Square> possible_moves = king->getPossibleMoves(*this);
+    // vector<Square> possible_moves = king->getPossibleMoves(*this);
 
-    cout << "NUmber of possible moves: " << possible_moves.size() << endl;
+    // cout << "NUmber of possible moves: " << possible_moves.size() << endl;
 
-    vector<Square> unsafe_moves;
+    // vector<Square> unsafe_moves;
 
-    for (int col = 0; col < 8; ++col) {
-        for (int row = 0; row < 8; ++row) {
-            Square& current_square = getSquare(col, row);
-            Piece *piece = current_square.getPiece();
+    // for (int col = 0; col < 8; ++col) {
+    //     for (int row = 0; row < 8; ++row) {
+    //         Square& current_square = getSquare(col, row);
+    //         Piece *piece = current_square.getPiece();
 
-            // Check for a valid piece
-            if (piece != nullptr ) {
-                // Check for opposition piece
-                if (islower(piece->getSymbol()) != islower(king->getSymbol())) {
+    //         // Check for a valid piece
+    //         if (piece != nullptr ) {
+    //             // Check for opposition piece
+    //             if (islower(piece->getSymbol()) != islower(king->getSymbol())) {
                     
-                    // Check for every move that the king can make
-                    for (Square& move : possible_moves) {
+    //                 // Check for every move that the king can make
+    //                 for (Square& move : possible_moves) {
 
-                    // cout << "IN INNER LOOP" << endl;
+    //                 // cout << "IN INNER LOOP" << endl;
 
-                        if (piece->validMove(*king_position, *this)) {
+    //                     if (piece->validMove(*king_position, *this)) {
 
-                            // vector<Square> path_to_king = getPathToKing(current_square, *king_position);
+    //                         // vector<Square> path_to_king = getPathToKing(current_square, *king_position);
 
-                            unsafe_moves.emplace_back(move);
-                        }
-                    }
+    //                         unsafe_moves.emplace_back(move);
+    //                     }
+    //                 }
 
 
-                }
-            }
-        }
-    }
+    //             }
+    //         }
+    //     }
+    // }
 
-    if (unsafe_moves.size() != possible_moves.size()) {
-        // Found a safe move for the king
-        return false;
-    }
+    // if (unsafe_moves.size() != possible_moves.size()) {
+    //     // Found a safe move for the king
+    //     return false;
+    // }
 
     for (int col = 0; col < 8; ++col) {
         for (int row = 0; row < 8; ++row) {
             Square& current_square = getSquare(col, row);
-            Piece *piece = current_square.getPiece();
+            Piece* piece = current_square.getPiece();
 
             // Check for a valid piece
             if (piece != nullptr ) {
@@ -312,7 +312,7 @@ bool Board::isCheckmate(bool isWhiteTurn) const {
                 if (islower(piece->getSymbol()) != islower(king->getSymbol())) {
                     // for (Square& move : possible_moves) {
 
-                    // cout << "IN INNER LOOP" << endl;
+                    cout << "IN INNER LOOP" << endl;
 
                     if (piece->validMove(*king_position, *this)) {
 
@@ -325,16 +325,37 @@ bool Board::isCheckmate(bool isWhiteTurn) const {
                             for (int r = 0; r < 8; ++r) {
                                 Piece* defending_piece = getSquare(c, r).getPiece();
 
+
+
+                                // if (piece->getCurrentPosition()->getCoordinates().first == defending_piece->getCurrentPosition().first)
+
                                 if (defending_piece != nullptr) {
-                                    if (islower(defending_piece->getSymbol()) != islower(king->getSymbol())) {
+
+                                    // Check if defending piece is king
+                                    if (defending_piece->getSymbol() == king->getSymbol()) {
+                                        continue;
+                                    }
+
+                                    cout << "KING SYMBOL: " << king->getSymbol() << endl;
+                                    cout << islower(king->getSymbol()) << endl;
+                                    cout << islower(defending_piece->getSymbol()) << endl;
+
+
+
+
+
+                                    if (islower(defending_piece->getSymbol()) == islower(king->getSymbol())) {
                                         for (Square& block_square : path_to_king) {
-                                        if (defending_piece->validMove(block_square, *this)) {
-                                            // Found a move that can block the check
-                                            return false;
+                                            if (defending_piece->validMove(block_square, *this)) {
+                                                // Found a move that can block the check
+                                                cout << defending_piece->getSymbol() << " can block" << endl;
+                                                cout << "ATTACKING PIECE " << piece->getSymbol() << endl;
+                                                return false;
                                         }
                                     }
                                     // Check if the defending piece can capture the attacker
                                     if (defending_piece->validMove(current_square, *this)) {
+                                        cout << defending_piece->getSymbol() << " can capture" << endl;
                                         return false;
                                     }
                                     }

@@ -72,7 +72,7 @@ bool King::validMove(Square& new_position, const Board& the_board) {
                     if (islower(temp_square.getPiece()->getSymbol()) != islower(getSymbol())) {
                          possible_moves.push_back(temp_square); // Add only if it's an opponent's piece
                     }
-                    break; // Stop after encountering any piece
+                    // break; // Stop after encountering any piece
                }
                possible_moves.push_back(temp_square);
           }
@@ -101,14 +101,14 @@ vector<Square> King::getPossibleMoves(const Board& the_board) {
      int old_y = old_coords.second;
 
      vector<pair<int, int>> all_moves = {
-          {old_x - 1, old_y + 1},
-          {old_x, old_y + 1},
-          {old_x + 1, old_y + 1},
-          {old_x - 1, old_y},
-          {old_x + 1, old_y},
-          {old_x - 1, old_y - 1},
-          {old_x, old_y - 1},
-          {old_x + 1, old_y - 1}
+         {old_x - 1, old_y + 1},
+         {old_x, old_y + 1},
+         {old_x + 1, old_y + 1},
+         {old_x - 1, old_y},
+         {old_x + 1, old_y},
+         {old_x - 1, old_y - 1},
+         {old_x, old_y - 1},
+         {old_x + 1, old_y - 1}
      };
 
      vector<Square> possible_moves;
@@ -123,7 +123,7 @@ vector<Square> King::getPossibleMoves(const Board& the_board) {
                     if (islower(temp_square.getPiece()->getSymbol()) != islower(getSymbol())) {
                          possible_moves.push_back(temp_square); // Add only if it's an opponent's piece
                     }
-                    break; // Stop after encountering any piece
+                    // break; // Stop after encountering any piece
                }
                possible_moves.push_back(temp_square);
           }

@@ -26,14 +26,15 @@ public:
     ~Player() {};
     string& getColour();
     PlayerType getType() const;
-    bool makeMove(Game* game, Board& board, bool isWhiteTurn);
+    pair<bool, bool> makeMove(Game *game, Board &board, bool isWhiteTurn);
 
 private:
-    bool humanMove(Game* game, Board& board, bool isWhiteTurn);
-    bool computer1Move(Game* game, Board& board, bool isWhiteTurn);
-    bool computer2Move(Game* game, Board& board, bool isWhiteTurn);
-    bool computer3Move(Game* game, Board& board, bool isWhiteTurn);
-    bool computer4Move(Game* game, Board& board, bool isWhiteTurn);
+    // First: valid_move, Second: checkmate 
+    pair<bool, bool> humanMove(Game* game, Board& board, bool isWhiteTurn);
+    pair<bool, bool> computer1Move(Game *game, Board &board, bool isWhiteTurn);
+    pair<bool, bool> computer2Move(Game *game, Board &board, bool isWhiteTurn);
+    pair<bool, bool> computer3Move(Game *game, Board &board, bool isWhiteTurn);
+    pair<bool, bool> computer4Move(Game *game, Board &board, bool isWhiteTurn);
 
     Move minimax(Game* game, Board& board, bool isWhiteTurn);
     vector<Move> generateAllPossibleMoves(Game* game, Board& board, bool isWhiteTurn);

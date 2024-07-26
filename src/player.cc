@@ -29,35 +29,45 @@ PlayerType Player::getType() const {
     return type;
 }
 
-bool Player::makeMove(Game* game, Board& board, bool isWhiteTurn) {
+pair<bool, bool> Player::makeMove(Game* game, Board& board, bool isWhiteTurn) {
     switch (type) {
-        case PlayerType::HUMAN:
-            return humanMove(game, board, isWhiteTurn);
+        case PlayerType::HUMAN: {
+            pair<bool, bool> valid_move_and_checkmate = humanMove(game, board, isWhiteTurn);
+            return valid_move_and_checkmate;
+        }
         case PlayerType::COMPUTER1: {
-            return computer1Move(game, board, isWhiteTurn);
+            pair<bool, bool> valid_move_and_checkmate = computer1Move(game, board, isWhiteTurn);
+            return valid_move_and_checkmate;
+            // return computer1Move(game, board, isWhiteTurn);
         }
         case PlayerType::COMPUTER2: {
-            return computer2Move(game, board, isWhiteTurn);
+            pair<bool, bool> valid_move_and_checkmate = computer2Move(game, board, isWhiteTurn);
+            return valid_move_and_checkmate;
+            // return computer2Move(game, board, isWhiteTurn);
         }
         case PlayerType::COMPUTER3: {
-            return computer3Move(game, board, isWhiteTurn);
+            pair<bool, bool> valid_move_and_checkmate = computer3Move(game, board, isWhiteTurn);
+            return valid_move_and_checkmate;
+            // return computer3Move(game, board, isWhiteTurn);
         }
         case PlayerType::COMPUTER4: {
-            return computer4Move(game, board, isWhiteTurn);
+            pair<bool, bool> valid_move_and_checkmate = computer4Move(game, board, isWhiteTurn);
+            return valid_move_and_checkmate;
+            // return computer4Move(game, board, isWhiteTurn);
         }
         default:
-            return false;
+            return make_pair(false, false);
     }
 }
 
-bool Player::humanMove(Game* game, Board& board, bool isWhiteTurn) {
+pair<bool, bool> Player::humanMove(Game* game, Board& board, bool isWhiteTurn) {
     string from, to, promotionPiece;
     cin >> from >> to;
 
     // Check for correct length of input
     if (from.length() != 2 && to.length() != 2) {
         cout << "Invalid coordinate given, try again" << endl;
-        return false;
+        return make_pair(false, false);
     }  
 
     if (!('a' <= from[0] && from[0] <= 'h' && 
@@ -65,7 +75,7 @@ bool Player::humanMove(Game* game, Board& board, bool isWhiteTurn) {
             'a' <= to[0] && to[0] <= 'h' && 
             '1' <= to[1] && to[1] <= '8')) {
         cout << "Invalid coordinate given, try again" << endl;
-        return false;
+        return make_pair(false, false);
     }
 
 
@@ -74,13 +84,13 @@ bool Player::humanMove(Game* game, Board& board, bool isWhiteTurn) {
 
     if (!f->getPiece()) {
         cout << "No piece in square, try again" << endl;
-        return false;
+        return make_pair(false, false);
     }
 
 
     if ((!islower(f->getPiece()->getSymbol()) && !isWhiteTurn) || (islower(f->getPiece()->getSymbol()) && isWhiteTurn)) {
         cout << "It's not your turn rn" << endl;
-        return false;
+        return make_pair(false, false);
     }
 
     cout << "You chose to move " << f->getPiece()->getSymbol() << endl;
@@ -96,19 +106,26 @@ bool Player::humanMove(Game* game, Board& board, bool isWhiteTurn) {
             if (isWhiteTurn) {
                 cout << "The white king is in check!" << endl;
 
-                if (king_in_checkmate) cout << "The white king is in checkmate" << endl;
+                if (king_in_checkmate) {
+                    cout << "The white king is in checkmate" << endl;
+                    return make_pair(true, true);
+                }
             } else {
                 cout << "The black king is in check!" << endl;
 
-                if (king_in_checkmate) cout << "The black king is in checkmate" << endl;
+                if (king_in_checkmate) {
+                    cout << "The black king is in checkmate" << endl;
+                    return make_pair(true, true);
+                }
             }
         }
 
         // TESTING
         game->getBoardModifiable()->pawnGettingPromoted(!isWhiteTurn);
-        return true;
+        return make_pair(true, false);
     }
-    return false;
+
+    return make_pair(false, false);
 }
 
 
