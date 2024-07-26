@@ -204,9 +204,7 @@ pair<bool, bool> King::isCurrentMoveCastling(pair<int, int> old_position, Square
      auto new_coords = new_position.getCoordinates();
 
      int old_x = old_position.first;
-     int old_y = old_position.second;
      int new_x = new_coords.first;
-     int new_y = new_coords.second;
 
      // cout << "OLD: " << "[" << old_x << ", " << old_y << "]" << endl;
      // cout << "NEW: " << "[" << new_x << ", " << new_y << "]" << endl;

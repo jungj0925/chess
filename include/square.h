@@ -35,7 +35,7 @@ class Square {
 
           pair<int, int> getCoordinates() const;
 
-          bool operator==(Square& rhs);
+          bool operator==(const Square& rhs) const;
 };
 
 #endif

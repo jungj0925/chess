@@ -498,19 +498,29 @@ pair<vector<char>, vector<char>> Board::getCapturedPieces() const {
 
 std::vector<Move> Board::getPossibleMoves(bool isWhiteTurn) {
     std::vector<Move> result;
+
+    // Iterate through each square on the board
     for (int x = 0; x < 8; ++x) {
         for (int y = 0; y < 8; ++y) {
             Square& square = getSquare(x, y);
             Piece* piece = square.getPiece();
-            if (piece && (islower(piece->getSymbol()) == isWhiteTurn)) {
-                std::vector<Square> possibleSquares = piece->getPossibleMoves(*this);
-                for (Square& toSquare : possibleSquares) {
 
+            if (piece == nullptr) {
+                continue;
+            }
+
+            // Check if the square has a piece and if it's the current player's piece
+            if (((isWhiteTurn && isupper(piece->getSymbol())) || (!isWhiteTurn && islower(piece->getSymbol())))) {
+                std::vector<Square> possibleSquares = piece->getPossibleMoves(*this);
+
+                // Iterate through each possible destination square
+                for (Square& toSquare : possibleSquares) {
+                    // Construct a move and add it to the result vector
                     result.emplace_back(&square, &toSquare, piece, *this);
-                    cout << "EMPLACING BACK" << endl;
                 }
             }
         }
     }
+
     return result;
 }

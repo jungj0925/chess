@@ -82,7 +82,8 @@ bool Player::humanMove(Game* game, Board& board, bool isWhiteTurn) {
         return false;
     }
 
-    if ((!islower(f->getPiece()->getSymbol()) && !isWhiteTurn) || (islower(f->getPiece()->getSymbol() && isWhiteTurn))) {
+
+    if ((!islower(f->getPiece()->getSymbol()) && !isWhiteTurn) || (islower(f->getPiece()->getSymbol()) && isWhiteTurn)) {
         cout << "It's not your turn rn" << endl;
         return false;
     }
@@ -118,8 +119,6 @@ bool Player::humanMove(Game* game, Board& board, bool isWhiteTurn) {
 
 // HELLO ANDY JUNG
 bool Player::computer1Move(Game* game, Board& board, bool isWhiteTurn) {
-    cout << "In first" << endl;
-
     vector<Move> possible_moves = board.getPossibleMoves(isWhiteTurn);
 
     cout << "FOUND POSSIBLE MOVES" << endl;

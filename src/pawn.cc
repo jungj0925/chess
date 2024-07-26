@@ -151,4 +151,6 @@ std::vector<Square> Pawn::getPossibleMoves(const Board &the_board) {
                }
           }   
      }
+
+     return possible_moves;
 }

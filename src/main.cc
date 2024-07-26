@@ -52,7 +52,7 @@ int main() {
                if (game != nullptr) {
                     Player* currentPlayer = game->getCurrentPlayer();
                     
-                    if (currentPlayer->getType() == PlayerType::HUMAN && cout << "Its in here" << endl) {
+                    if (currentPlayer->getType() == PlayerType::HUMAN) {
                          if (!currentPlayer->makeMove(game, game->getBoard2(), isWhiteTurn)) {
                               continue;
                          } else {
@@ -61,7 +61,6 @@ int main() {
                          }
                     } else if (currentPlayer->getType() == PlayerType::COMPUTER1) {
                          if (!currentPlayer->makeMove(game, game->getBoard2(), isWhiteTurn)) {
-                              cout << "Stuck here" << endl;
                               continue;
                          } else {
                               game->changeTurns();

@@ -35,7 +35,6 @@ Piece* Square::getPiece() {
 }
 
 void Square::setPiece(Piece* new_piece) {
-     the_piece = nullptr;
      the_piece = new_piece;
 }
 
@@ -47,7 +46,6 @@ pair<int, int> Square::getCoordinates() const {
      return make_pair(col, row);
 }
 
-bool Square::operator==(Square& rhs) {
-     if ((col == rhs.col) && (row == rhs.row)) return true;
-     return false;
+bool Square::operator==(const Square& rhs) const {
+    return (col == rhs.col) && (row == rhs.row);
 }
