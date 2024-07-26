@@ -7,10 +7,8 @@ Player::Player(const string& name, const string& colour)
     : name(name), colour(colour) {
     if (name == "human") {
         type = PlayerType::HUMAN;
-        cout << "human init." << endl;
     } else if (name == "computer1") {
         type = PlayerType::COMPUTER1;
-        cout << "computer init." << endl;
     } else if (name == "computer2") {
         type = PlayerType::COMPUTER2;
     } else if (name == "computer3") {
@@ -35,13 +33,11 @@ bool Player::makeMove(Game* game, Board& board, bool isWhiteTurn) {
         case PlayerType::HUMAN:
             return humanMove(game, board, isWhiteTurn);
         case PlayerType::COMPUTER1: {
-            cout << "In switch case" << endl;
             return computer1Move(game, board, isWhiteTurn);
         }
-        // case PlayerType::COMPUTER2: {
-        //     Move computerMove = computer2Move(board);
-        //     return board.movePiece(computerMove);
-        // }
+        case PlayerType::COMPUTER2: {
+            return computer2Move(game, board, isWhiteTurn);
+        }
         // case PlayerType::COMPUTER3: {
         //     Move computerMove = computer3Move(board);
         //     return board.movePiece(computerMove);
@@ -163,36 +159,182 @@ bool Player::computer1Move(Game* game, Board& board, bool isWhiteTurn) {
     return false;
 }
 
-// Move Player::computer2Move(Board& board) {
-//     // Slightly more advanced logic than ComputerPlayer1
-//     // Example: prioritize captures over random moves
-//     srand(static_cast<unsigned>(time(0)));
-//     vector<Move> legalMoves = board.getAllLegalMoves(colour);
-//     vector<Move> captureMoves;
-//     for (const auto& move : legalMoves) {
-//         if (move.isCapture()) {
-//             captureMoves.push_back(move);
+bool Player::computer2Move(Game* game, Board& board, bool isWhiteTurn) {
+    // Example: Move that captures the highest value piece
+    vector<Move> possible_moves = board.getPossibleMoves(isWhiteTurn);
+    cout << "1" << endl;
+    if (possible_moves.empty()) {
+        return false;
+    }
+    cout << "2" << endl;
+    Move best_move = possible_moves[0];  // Initialize with the first move
+    int best_value = -9999;
+    for (const Move& move : possible_moves) {
+        int move_value = evaluateMove(board, move);
+        if (move_value > best_value) {
+            best_value = move_value;
+            best_move = move;
+        }
+    }
+    cout << "3" << endl;
+
+    if (game->makeMove(best_move)) {
+        // After making the move, check for check or checkmate
+        bool king_in_check = game->getBoard().isCheck(isWhiteTurn);
+        bool king_in_checkmate;
+
+        if (king_in_check) {
+            king_in_checkmate = game->getBoard().isCheckmate(isWhiteTurn);
+            if (isWhiteTurn) {
+                cout << "The white king is in check!" << endl;
+                if (king_in_checkmate) cout << "The white king is in checkmate" << endl;
+            } else {
+                cout << "The black king is in check!" << endl;
+                if (king_in_checkmate) cout << "The black king is in checkmate" << endl;
+            }
+        }
+        // Update promotion if needed
+        game->getBoardModifiable()->pawnGettingPromoted(!isWhiteTurn);
+        return true;
+    }
+    return false;
+}
+
+int Player::evaluateMove(const Board& board, const Move& move) {
+    // Simple piece values
+    const int PAWN_VALUE = 1;
+    const int KNIGHT_VALUE = 3;
+    const int BISHOP_VALUE = 3;
+    const int ROOK_VALUE = 5;
+    const int QUEEN_VALUE = 9;
+    const int KING_VALUE = 0; // King value can be high negative if needed
+
+    // Piece values map
+    unordered_map<char, int> piece_values = {
+        {'P', PAWN_VALUE}, {'p', -PAWN_VALUE},
+        {'N', KNIGHT_VALUE}, {'n', -KNIGHT_VALUE},
+        {'B', BISHOP_VALUE}, {'b', -BISHOP_VALUE},
+        {'R', ROOK_VALUE}, {'r', -ROOK_VALUE},
+        {'Q', QUEEN_VALUE}, {'q', -QUEEN_VALUE},
+        {'K', KING_VALUE}, {'k', -KING_VALUE}
+    };
+
+    // Get the starting and ending coordinates of the move
+    const pair<int, int> from_coordinates = move.getFromCoordinates();
+    const pair<int, int> to_coordinates = move.getToCoordinates();
+
+    // Get the piece being moved and its value
+    const Piece* moving_piece = move.getPiece();
+    if (!moving_piece) {
+        cerr << "Error: moving_piece is null" << endl;
+        return -9999; // or some other low value to indicate an invalid move
+    }
+
+    char moving_piece_symbol = moving_piece->getSymbol();
+    int move_value = piece_values[moving_piece_symbol];
+
+    // Check the destination square
+    Square to_square = board.getSquare(to_coordinates.first, to_coordinates.second);
+    if (to_square.isOccupied()) {
+        const Piece* destination_piece = to_square.getPiece();
+        if (destination_piece) {
+            char destination_piece_symbol = destination_piece->getSymbol();
+            // If the destination square is occupied, adjust the move value based on the piece being captured
+            move_value += piece_values[destination_piece_symbol];
+        }
+    }
+
+    return move_value;
+}
+
+
+
+
+// Minimax function
+int minimax(Game* game, Board& board, bool isWhiteTurn, int depth, bool isMaximizingPlayer) {
+    if (depth == 0 || game->isGameOver()) {
+        return evaluateBoard(board, isWhiteTurn); // Evaluate the board state
+    }
+
+    vector<Move> possible_moves = board.getPossibleMoves(isWhiteTurn);
+    if (possible_moves.empty()) {
+        return isMaximizingPlayer ? NEG_INF : INF; // No moves means a bad position for the player
+    }
+
+    int bestValue = isMaximizingPlayer ? NEG_INF : INF;
+
+    for (const Move& move : possible_moves) {
+        Board newBoard = board; // Create a new board state
+        game->makeMove(move); // Apply the move
+        int value = minimax(game, newBoard, !isWhiteTurn, depth - 1, !isMaximizingPlayer); // Recursively evaluate
+        game->undoMove(move); // Undo the move
+
+        if (isMaximizingPlayer) {
+            bestValue = std::max(bestValue, value);
+        } else {
+            bestValue = std::min(bestValue, value);
+        }
+    }
+
+    return bestValue;
+}
+
+// // Computer Move function using Minimax
+// Move Player::computer3Move(Game* game, Board& board, bool isWhiteTurn) {
+//     vector<Move> possible_moves = board.getPossibleMoves(isWhiteTurn);
+
+//     if (possible_moves.empty()) {
+//         return Move(nullptr, nullptr, nullptr, board); // Return an invalid move if no moves are possible
+//     }
+
+//     Move best_move = possible_moves[0];
+//     int best_value = NEG_INF;
+
+//     for (const Move& move : possible_moves) {
+//         Board newBoard = board; // Create a new board state
+//         game->makeMove(move); // Apply the move
+//         int move_value = minimax(game, newBoard, !isWhiteTurn, MAX_DEPTH - 1, false); // Evaluate the move
+//         game->undoMove(move); // Undo the move
+
+//         if (move_value > best_value) {
+//             best_value = move_value;
+//             best_move = move;
 //         }
 //     }
-//     if (!captureMoves.empty()) {
-//         int randomIndex = rand() % captureMoves.size();
-//         return captureMoves[randomIndex];
-//     }
-//     if (!legalMoves.empty()) {
-//         int randomIndex = rand() % legalMoves.size();
-//         return legalMoves[randomIndex];
-//     }
-//     return Move();
+
+//     return best_move;
 // }
 
-// Move Player::computer3Move(Board& board) {
-//     // More advanced logic, such as simple heuristic evaluation
-//     // Implement the logic here
-//     return Move();
+// // Evaluation function (example, modify as needed)
+// int evaluateBoard(const Board& board, bool isWhiteTurn) {
+//     // Simple example: evaluate the board based on piece values
+//     int score = 0;
+//     for (const auto& piece : board.getAllPieces()) {
+//         if (piece->getColour() == isWhiteTurn) {
+//             score += getPieceValue(piece->getSymbol());
+//         } else {
+//             score -= getPieceValue(piece->getSymbol());
+//         }
+//     }
+//     return score;
 // }
 
-// Move Player::computer4Move(Board& board) {
-//     // Even more advanced logic, such as minimax algorithm with a certain depth
-//     // Implement the logic here
-//     return Move();
+// // Helper function to get the value of a piece
+// int getPieceValue(char symbol) {
+//     switch (symbol) {
+//         case 'P': return 1;
+//         case 'N': return 3;
+//         case 'B': return 3;
+//         case 'R': return 5;
+//         case 'Q': return 9;
+//         case 'K': return 0;
+//         default: return 0;
+//     }
 // }
+
+
+// // Move Player::computer4Move(Board& board) {
+// //     // Even more advanced logic, such as minimax algorithm with a certain depth
+// //     // Implement the logic here
+// //     return Move();
+// // }

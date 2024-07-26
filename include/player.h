@@ -7,6 +7,7 @@
 #include "move.h"  // Include the Move header file
 #include <string>
 #include <vector>
+#include <limits>
 
 class Game;
 
@@ -30,8 +31,16 @@ public:
 private:
     bool humanMove(Game* game, Board& board, bool isWhiteTurn);
     bool computer1Move(Game* game, Board& board, bool isWhiteTurn);
-    Move computer2Move(Board& board);
-    Move computer3Move(Board& board);
+    bool computer2Move(Game* game, Board& board, bool isWhiteTurn);
+    bool computer3Move(Game* game, Board& board, bool isWhiteTurn);
+
+    Move minimax(Game* game, Board& board, bool isWhiteTurn);
+    vector<Move> generateAllPossibleMoves(Game* game, Board& board, bool isWhiteTurn);
+
+
+    int evaluateBoard(const Board& board, bool isWhiteTurn);
+    int evaluateMove(const Board& board, const Move& move);
+
     Move computer4Move(Board& board);
 };
 

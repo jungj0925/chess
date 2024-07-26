@@ -8,6 +8,7 @@
 #include "../include/square.h"
 
 #include "textObserver.h"
+#include "graphicsObserver.h"
 
 using namespace std;
 
@@ -26,6 +27,7 @@ int main() {
                cin >> p1 >> p2;
                game = new Game(p1, p2, manual_setup);
                (*game->getBoardModifiable()).attach(new TextObserver(game->getBoardModifiable()));
+               // (*game->getBoardModifiable()).attach(new GraphicsObserver(game->getBoardModifiable()));
                cout << "New game started between " << p1 << " and " << p2 << "." << endl;
                new_game_started = true;
                cout << "It is white's turn" << endl;
@@ -51,21 +53,11 @@ int main() {
           else if (command == "move") {
                if (game != nullptr) {
                     Player* currentPlayer = game->getCurrentPlayer();
-                    
-                    if (currentPlayer->getType() == PlayerType::HUMAN) {
-                         if (!currentPlayer->makeMove(game, game->getBoard2(), isWhiteTurn)) {
-                              continue;
-                         } else {
-                              game->changeTurns();
-                              isWhiteTurn = !isWhiteTurn;
-                         }
-                    } else if (currentPlayer->getType() == PlayerType::COMPUTER1) {
-                         if (!currentPlayer->makeMove(game, game->getBoard2(), isWhiteTurn)) {
-                              continue;
-                         } else {
-                              game->changeTurns();
-                              isWhiteTurn = !isWhiteTurn;
-                         }
+                    if (!currentPlayer->makeMove(game, game->getBoard2(), isWhiteTurn)) {
+                         continue;
+                    } else {
+                         game->changeTurns();
+                         isWhiteTurn = !isWhiteTurn;
                     }
                     cout << "It is " << (isWhiteTurn ? "white's" : "black's") << " turn" << endl;
                     game->getBoard().display();
@@ -175,6 +167,8 @@ int main() {
      if (game != nullptr) {
           delete game;
      }
+
+     delete game;
 
      return 0;
 }

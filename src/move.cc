@@ -26,10 +26,5 @@
 // }
 
 // Constructor that takes Square pointers
-Move::Move(Square* from, Square* to, Piece* piece, const Board& board)
-    : from(from), to(to), piece(piece), board{board} {}
 
 // Destructor
-Move::~Move() {
-
-}
