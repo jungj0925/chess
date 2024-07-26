@@ -349,7 +349,6 @@ bool Board::isCheckmate(bool isWhiteTurn) const {
 
     return true;
 }
-
 void Board::pawnGettingPromoted(bool is_white_turn) {
     // Set defaults to white turn
     // vector<char> captured_pieces = getCapturedPieces().first;
@@ -367,16 +366,6 @@ void Board::pawnGettingPromoted(bool is_white_turn) {
     }
 
     char promoted_pawn;
-
-    // cout << getCapturedPieces().first.size() << endl;
-    // for (auto p : captured_pieces) cout << p << ", ";
-
-    // // DEBUGGING
-    // auto cp = getCapturedPieces().second;
-    // cout << getCapturedPieces().second.size() << endl;
-    // for (auto p : cp) cout << p << ", ";
-
-
 
     // Check for pawn getting promoted
     for (int col = 0; col < 8; ++col) {

@@ -1,11 +1,11 @@
 #include <iostream>
 #include <string>
 
-#include "../include/game.h"
+#include "game.h"
 #include "board.h"
 #include "player.h"
 #include "move.h"
-#include "../include/square.h"
+#include "square.h"
 
 #include "textObserver.h"
 #include "graphicsObserver.h"
@@ -32,25 +32,19 @@ int main() {
                new_game_started = true;
                cout << "It is white's turn" << endl;
                game->getBoard().display();
-          }
-          
-          
-          // else if (command == "resign") {
-          //      if (game != nullptr && !game->isGameOver()) {
-          //           if (game->isWhiteTurn()) {
-          //                cout << "White resigns. Black wins!" << endl;
-          //           } else {
-          //                cout << "Black resigns. White wins!" << endl;
-          //           }
-          //           delete game;
-          //           game = nullptr;
-          //      } else {
-          //           cout << "No game is currently running." << endl;
-          //      }
-          // }
-          
-          
-          else if (command == "move") {
+          } else if (command == "resign") {
+               if (game != nullptr) {
+                    if (game->isWhiteTurn()) {
+                         cout << "White resigns. Black wins!" << endl;
+                    } else {
+                         cout << "Black resigns. White wins!" << endl;
+                    }
+                    delete game;
+                    game = nullptr;
+               } else {
+                    cout << "No game is currently running." << endl;
+               }
+          } else if (command == "move") {
                if (game != nullptr) {
                     Player* currentPlayer = game->getCurrentPlayer();
                     if (!currentPlayer->makeMove(game, game->getBoard2(), isWhiteTurn)) {
@@ -69,6 +63,22 @@ int main() {
           } else if (command == "render") {
                if (game != nullptr) {
                     game->getBoard().display();
+               }
+          } else if (command == "captured_pieces") {
+               if (game != nullptr) {
+                    pair<vector<char>, vector<char>> captured_pieces = game->getBoard().getCapturedPieces();
+                    vector<char> white_captured_pieces = captured_pieces.first;
+                    vector<char> black_captured_pieces = captured_pieces.second;
+
+                    cout << "You have captured: ";
+                    if (isWhiteTurn) {
+                         for (auto piece : black_captured_pieces) cout << piece << "  ";
+                    } else {
+                         for (auto piece : white_captured_pieces) cout << piece << "  ";
+                    }
+                    cout << "\n";
+               } else {
+                    cout << "Game hasn't even started yet" << endl;
                }
           }
           
