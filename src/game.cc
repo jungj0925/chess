@@ -88,6 +88,9 @@ bool Game::makeMove(Move& move) {
 
     if (piece && piece->validMove(*to_square, *board)) {
         piece->move(to_square, *board);
+
+        
+        board->addToMoveHistory(move);
         // board->getSquare(toSquare->getCoordinates().first, toSquare->getCoordinates().second).setPiece(piece);
         // fromSquare->setPiece(nullptr);
     } else {

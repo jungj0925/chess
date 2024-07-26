@@ -6,6 +6,7 @@
 #include <algorithm>
 #include <utility>
 #include <iostream>
+#include <stack>
 
 #include "subject.h"
 #include "square.h"
@@ -17,10 +18,11 @@
 #include "bishop.h"
 #include "queen.h"
 #include "king.h"
+#include "move.h"
 
 // #include "move.h"
 
-class Move;
+// class Move;
 
 using namespace std;
 
@@ -29,6 +31,8 @@ class Board : public Subject {
           vector<vector<Square *>> the_board;
           Piece* whiteKing;
           Piece* blackKing;
+          stack<Move> move_history;
+
      public:
           Board();
           ~Board();
@@ -54,6 +58,21 @@ class Board : public Subject {
           string coordinatesToPosition(int x, int y);
 
           vector<Move> getPossibleMoves(bool isWhiteTurn);
+
+
+          void addToMoveHistory(Move move) {
+               move_history.push(move);
+          }
+
+          stack<Move> getMoveHistory() const {
+               return move_history;
+          }
+
+          const Move getLastMove() const {
+               if (!move_history.empty()) {
+                    return move_history.top();
+               }
+          }
 };
 
 #endif

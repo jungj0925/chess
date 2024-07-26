@@ -3,10 +3,12 @@
 
 #include <string>
 #include "square.h"
-#include "board.h"
+// #include "board.h"
 #include "piece.h"
 
 // class Piece;
+
+class Board;
 
 using namespace std;
 
