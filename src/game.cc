@@ -66,7 +66,7 @@ bool Game::makeMove(Move& move) {
     Square* to_square;
     pair<int, int> from_coordinates;
     pair<int, int> to_coordinates;
-
+    cout << "In MoveMove" << endl;
 
     if (move.getStartingCoord() == nullptr) {
         from_coordinates = move.getFromCoordinates();

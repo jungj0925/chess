@@ -352,26 +352,31 @@ bool Board::isCheckmate(bool isWhiteTurn) const {
 
 void Board::pawnGettingPromoted(bool is_white_turn) {
     // Set defaults to white turn
-    vector<char> captured_pieces = getCapturedPieces().first;
+    // vector<char> captured_pieces = getCapturedPieces().first;
     int row = 7;
     char pawn_symbol = 'P'; 
 
+    vector<char> possible_new_pieces = {'R', 'N', 'B', 'Q'};
+
     // Get all the dead pieces
     if (!is_white_turn) {
-        captured_pieces = getCapturedPieces().second;
+        // captured_pieces = getCapturedPieces().second;
+        vector<char> possible_new_pieces = {'r', 'n', 'b', 'q'};
         row = 0;
         pawn_symbol = 'p';
     }
 
     char promoted_pawn;
 
-    cout << getCapturedPieces().first.size() << endl;
-    for (auto p : captured_pieces) cout << p << ", ";
+    // cout << getCapturedPieces().first.size() << endl;
+    // for (auto p : captured_pieces) cout << p << ", ";
 
-    // DEBUGGING
-    auto cp = getCapturedPieces().second;
-    cout << getCapturedPieces().second.size() << endl;
-    for (auto p : cp) cout << p << ", ";
+    // // DEBUGGING
+    // auto cp = getCapturedPieces().second;
+    // cout << getCapturedPieces().second.size() << endl;
+    // for (auto p : cp) cout << p << ", ";
+
+
 
     // Check for pawn getting promoted
     for (int col = 0; col < 8; ++col) {
@@ -385,18 +390,14 @@ void Board::pawnGettingPromoted(bool is_white_turn) {
 
                 
                 cout << "These are your promotion options : ";
-                for (auto piece : captured_pieces) cout << piece << "   ";
+                for (auto piece : possible_new_pieces) cout << piece << "   ";
                 cout << "\n";
 
                 cout << "Which piece would you like to promote your pawn to (type the character below): " << endl;
-                // cout << "(";
-                // for (auto piece : captured_pieces) cout << piece << ", ";
-                // cout << ")" << endl;
 
-                // cin >> promoted_pawn;
                 while (true) {
                     cin >> promoted_pawn;
-                    if (isPresent(captured_pieces, promoted_pawn)) {
+                    if (isPresent(possible_new_pieces, promoted_pawn)) {
                         cout << "Your pawn has been promoted!" << endl;
                         break;
                     } else {

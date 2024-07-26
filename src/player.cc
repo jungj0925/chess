@@ -117,7 +117,7 @@ bool Player::humanMove(Game* game, Board& board, bool isWhiteTurn) {
 bool Player::computer1Move(Game* game, Board& board, bool isWhiteTurn) {
     vector<Move> possible_moves = board.getPossibleMoves(isWhiteTurn);
 
-    cout << "FOUND POSSIBLE MOVES" << endl;
+    // cout << "FOUND POSSIBLE MOVES" << endl;
 
 
     if (possible_moves.empty()) {
@@ -135,6 +135,11 @@ bool Player::computer1Move(Game* game, Board& board, bool isWhiteTurn) {
 
     // Select a random move
     Move move = possible_moves[rand() % possible_moves.size()];
+
+    cout << "chosen move:" << endl;
+    cout << "(" << move.getFromCoordinates().first << ", " << move.getFromCoordinates().second << ")   ->   ";
+    cout << "(" << move.getToCoordinates().first << ", " << move.getToCoordinates().second << ")" << endl;
+
     
     // ERROR POINT
     if (game->makeMove(move)) {
@@ -250,34 +255,34 @@ int Player::evaluateMove(const Board& board, const Move& move) {
 
 
 
-// Minimax function
-int minimax(Game* game, Board& board, bool isWhiteTurn, int depth, bool isMaximizingPlayer) {
-    if (depth == 0 || game->isGameOver()) {
-        return evaluateBoard(board, isWhiteTurn); // Evaluate the board state
-    }
+// // Minimax function
+// int minimax(Game* game, Board& board, bool isWhiteTurn, int depth, bool isMaximizingPlayer) {
+//     if (depth == 0 || game->isGameOver()) {
+//         return evaluateBoard(board, isWhiteTurn); // Evaluate the board state
+//     }
 
-    vector<Move> possible_moves = board.getPossibleMoves(isWhiteTurn);
-    if (possible_moves.empty()) {
-        return isMaximizingPlayer ? NEG_INF : INF; // No moves means a bad position for the player
-    }
+//     vector<Move> possible_moves = board.getPossibleMoves(isWhiteTurn);
+//     if (possible_moves.empty()) {
+//         return isMaximizingPlayer ? NEG_INF : INF; // No moves means a bad position for the player
+//     }
 
-    int bestValue = isMaximizingPlayer ? NEG_INF : INF;
+//     int bestValue = isMaximizingPlayer ? NEG_INF : INF;
 
-    for (const Move& move : possible_moves) {
-        Board newBoard = board; // Create a new board state
-        game->makeMove(move); // Apply the move
-        int value = minimax(game, newBoard, !isWhiteTurn, depth - 1, !isMaximizingPlayer); // Recursively evaluate
-        game->undoMove(move); // Undo the move
+//     for (const Move& move : possible_moves) {
+//         Board newBoard = board; // Create a new board state
+//         game->makeMove(move); // Apply the move
+//         int value = minimax(game, newBoard, !isWhiteTurn, depth - 1, !isMaximizingPlayer); // Recursively evaluate
+//         game->undoMove(move); // Undo the move
 
-        if (isMaximizingPlayer) {
-            bestValue = std::max(bestValue, value);
-        } else {
-            bestValue = std::min(bestValue, value);
-        }
-    }
+//         if (isMaximizingPlayer) {
+//             bestValue = std::max(bestValue, value);
+//         } else {
+//             bestValue = std::min(bestValue, value);
+//         }
+//     }
 
-    return bestValue;
-}
+//     return bestValue;
+// }
 
 // // Computer Move function using Minimax
 // Move Player::computer3Move(Game* game, Board& board, bool isWhiteTurn) {
