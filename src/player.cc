@@ -116,21 +116,10 @@ bool Player::humanMove(Game* game, Board& board, bool isWhiteTurn) {
 bool Player::computer1Move(Game* game, Board& board, bool isWhiteTurn) {
     vector<Move> possible_moves = board.getPossibleMoves(isWhiteTurn);
 
-    // cout << "FOUND POSSIBLE MOVES" << endl;
-
-
     if (possible_moves.empty()) {
         cout << "No way it's empty" << endl;
         return false; // No valid moves
     }
-
-    // Possible moves
-    // cout << "TOTAL POSSIBLE MOVES: " << possible_moves.size() << endl;
-    // for (auto move : possible_moves) {
-
-    //     cout << "(" << move.getStartingCoord()->getCoordinates().first << ", " << move.getStartingCoord()->getCoordinates().second << ")   ->   ";
-    //     cout << "(" << move.getDestinationCoord()->getCoordinates().first << ", " << move.getDestinationCoord()->getCoordinates().second << ")" << endl;
-    // }
 
     // Select a random move
     std::srand(std::time(nullptr));
@@ -229,11 +218,6 @@ bool Player::computer2Move(Game* game, Board& board, bool isWhiteTurn) {
     if (!move_found) {
         move = possible_moves[rand() % possible_moves.size()];
     }
-
-    std::cout << "chosen move:" << std::endl;
-    std::cout << "(" << move.getFromCoordinates().first << ", " << move.getFromCoordinates().second << ")   ->   ";
-    std::cout << "(" << move.getToCoordinates().first << ", " << move.getToCoordinates().second << ")" << std::endl;
-
     if (game->makeMove(move)) {
         // After making the move, check for check or checkmate
         bool king_in_check = game->getBoard().isCheck(isWhiteTurn);
@@ -366,10 +350,6 @@ bool Player::computer4Move(Game* game, Board& board, bool isWhiteTurn) {
             }
         }
     }
-    std::cout << "chosen move:" << std::endl;
-    std::cout << "(" << move.getFromCoordinates().first << ", " << move.getFromCoordinates().second << ")   ->   ";
-    std::cout << "(" << move.getToCoordinates().first << ", " << move.getToCoordinates().second << ")" << std::endl;
-
     if (game->makeMove(move)) {
         // After making the move, check for check or checkmate
         bool king_in_check = game->getBoard().isCheck(isWhiteTurn);
