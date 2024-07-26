@@ -104,7 +104,7 @@ bool Pawn::validMove(Square& new_position, const Board& the_board) {
                          if (last_piece->getSymbol() == 'P' || last_piece->getSymbol() == 'p') {
                               Pawn* last_piece_pawn = dynamic_cast<Pawn*>(last_piece);
 
-                              if (last_piece_pawn != nullptr) cout << "IS PAWN" << endl; 
+                              // if (last_piece_pawn != nullptr) cout << "IS PAWN" << endl; 
 
                               // Check if last move was a first move and moving two squares
                               if (last_piece_pawn->move_counter == 1 && last_piece_pawn->moved_two_squares) {
@@ -174,7 +174,7 @@ Square* Pawn::isCurrentMoveEnPassant(pair<int, int> old_position, Square& new_po
                          if (last_piece->getSymbol() == 'P' || last_piece->getSymbol() == 'p') {
                               Pawn* last_piece_pawn = dynamic_cast<Pawn*>(last_piece);
 
-                              if (last_piece_pawn != nullptr) cout << "IS PAWN" << endl; 
+                              // if (last_piece_pawn != nullptr) cout << "IS PAWN" << endl; 
 
 
                               // Check if last move was a first move and moving two squares

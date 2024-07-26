@@ -189,7 +189,6 @@ pair<bool, bool> Player::computer2Move(Game* game, Board& board, bool isWhiteTur
     std::vector<Move> possible_moves = board.getPossibleMoves(isWhiteTurn);
 
     if (possible_moves.empty()) {
-        std::cout << "No way it's empty" << std::endl;
         return make_pair(false, false); // No valid moves
     }
     std::srand(std::time(nullptr));

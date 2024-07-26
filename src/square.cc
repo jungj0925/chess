@@ -15,9 +15,6 @@ Square::Square(const string& position, const Board& board) {
     
      col = file - 'a'; // Convert '1'-'8' to 0-7
      row = rank - '1'; // Convert 'a'-'h' to 0-7
-
-     cout << col << " " << row << endl;
-
      the_piece = board.getSquare(col, row).getPiece();
 }
 

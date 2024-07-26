@@ -12,7 +12,7 @@ void TextObserver::notify() {
     char blackSquare = '#'; // ■
 
     for (int i = 7; i >= 0; --i) {
-        std::cout << i + 1 << " ";
+        std::cout << i + 1 << "   ";
         for (int j = 0; j < 8; ++j) {
             // const Square& square = board->getSquare(i, j);
             if (board->getSquare(j, i).isOccupied()) {
@@ -25,5 +25,5 @@ void TextObserver::notify() {
         }
         std::cout << std::endl;
     }
-    std::cout << "  a b c d e f g h" << std::endl;
+    std::cout << endl << "    a b c d e f g h" << std::endl;
 }

@@ -27,7 +27,7 @@ int main() {
                cin >> p1 >> p2;
                game = new Game(p1, p2, manual_setup);
                (*game->getBoardModifiable()).attach(new TextObserver(game->getBoardModifiable()));
-               // (*game->getBoardModifiable()).attach(new GraphicsObserver(game->getBoardModifiable()));
+               (*game->getBoardModifiable()).attach(new GraphicsObserver(game->getBoardModifiable()));
                cout << "New game started between " << p1 << " and " << p2 << "." << endl;
                new_game_started = true;
                cout << "It is white's turn" << endl;
@@ -112,7 +112,7 @@ int main() {
                     manual_setup = true;
                     game = new Game("human", "human", manual_setup);
                     (*game->getBoardModifiable()).attach(new TextObserver(game->getBoardModifiable()));
-                    // (*game->getBoardModifiable()).attach(new GraphicsObserver(game->getBoardModifiable()));
+                    (*game->getBoardModifiable()).attach(new GraphicsObserver(game->getBoardModifiable()));
                     string setupCommand;
                     bool whiteKingPlaced = false;
                     bool blackKingPlaced = false;
