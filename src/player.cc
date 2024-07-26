@@ -130,22 +130,16 @@ pair<bool, bool> Player::humanMove(Game* game, Board& board, bool isWhiteTurn) {
 
 
 // HELLO ANDY JUNG
-bool Player::computer1Move(Game* game, Board& board, bool isWhiteTurn) {
+pair<bool, bool> Player::computer1Move(Game* game, Board& board, bool isWhiteTurn) {
     vector<Move> possible_moves = board.getPossibleMoves(isWhiteTurn);
 
     if (possible_moves.empty()) {
-        cout << "No way it's empty" << endl;
-        return false; // No valid moves
+        return make_pair(false, false); // No valid moves
     }
 
     // Select a random move
     std::srand(std::time(nullptr));
     Move move = possible_moves[rand() % possible_moves.size()];
-
-    cout << "chosen move:" << endl;
-    cout << "(" << move.getFromCoordinates().first << ", " << move.getFromCoordinates().second << ")   ->   ";
-    cout << "(" << move.getToCoordinates().first << ", " << move.getToCoordinates().second << ")" << endl;
-
     
     // ERROR POINT
     if (game->makeMove(move)) {
@@ -157,20 +151,26 @@ bool Player::computer1Move(Game* game, Board& board, bool isWhiteTurn) {
             king_in_checkmate = game->getBoard().isCheckmate(isWhiteTurn);
             if (isWhiteTurn) {
                 cout << "The white king is in check!" << endl;
-                if (king_in_checkmate) cout << "The white king is in checkmate" << endl;
+                if (king_in_checkmate) {
+                    cout << "The white king is in checkmate" << endl;
+                    return make_pair(true, true);
+                }
             } else {
                 cout << "The black king is in check!" << endl;
-                if (king_in_checkmate) cout << "The black king is in checkmate" << endl;
+                if (king_in_checkmate) {
+                    cout << "The black king is in checkmate" << endl;
+                    return make_pair(true, true);
+                }
             }
         }
         // Update promotion if needed
         game->getBoardModifiable()->pawnGettingPromoted(!isWhiteTurn);
-        return true;
+        return make_pair(true, false);;
     }
-    return false;
+    return make_pair(false, false);;
 }
 
-bool Player::computer2Move(Game* game, Board& board, bool isWhiteTurn) {
+pair<bool, bool> Player::computer2Move(Game* game, Board& board, bool isWhiteTurn) {
     static std::vector<std::pair<std::pair<int, int>, std::pair<int, int>>> white_opening_moves = {
         {{6, 4}, {4, 4}}, // e2 to e4
         {{7, 6}, {5, 5}}, // g1 to f3
@@ -190,7 +190,7 @@ bool Player::computer2Move(Game* game, Board& board, bool isWhiteTurn) {
 
     if (possible_moves.empty()) {
         std::cout << "No way it's empty" << std::endl;
-        return false; // No valid moves
+        return make_pair(false, false); // No valid moves
     }
     std::srand(std::time(nullptr));
 
@@ -244,24 +244,30 @@ bool Player::computer2Move(Game* game, Board& board, bool isWhiteTurn) {
             king_in_checkmate = game->getBoard().isCheckmate(isWhiteTurn);
             if (isWhiteTurn) {
                 std::cout << "The white king is in check!" << std::endl;
-                if (king_in_checkmate) std::cout << "The white king is in checkmate" << std::endl;
+                if (king_in_checkmate) {
+                    std::cout << "The white king is in checkmate" << std::endl;
+                    return make_pair(true, true);
+                }
             } else {
                 std::cout << "The black king is in check!" << std::endl;
-                if (king_in_checkmate) std::cout << "The black king is in checkmate" << std::endl;
+                if (king_in_checkmate) {
+                    std::cout << "The black king is in checkmate" << std::endl;
+                    return make_pair(true, true);
+                }
             }
         }
         // Update promotion if needed
         game->getBoardModifiable()->pawnGettingPromoted(!isWhiteTurn);
-        return true;
+        return make_pair(true, false);
     }
-    return false;
+    return make_pair(false, false);
 }
 
 
-bool Player::computer3Move(Game* game, Board& board, bool isWhiteTurn) {
+pair<bool, bool> Player::computer3Move(Game* game, Board& board, bool isWhiteTurn) {
     std::vector<Move> possible_moves = board.getPossibleMoves(isWhiteTurn);
     if (possible_moves.empty()) {
-        return false;
+        return make_pair(false, false);
     }
 
     // Seed the random number generator
@@ -279,17 +285,23 @@ bool Player::computer3Move(Game* game, Board& board, bool isWhiteTurn) {
                 king_in_checkmate = game->getBoard().isCheckmate(isWhiteTurn);
                 if (isWhiteTurn) {
                     std::cout << "The white king is in check!" << std::endl;
-                    if (king_in_checkmate) std::cout << "The white king is in checkmate" << std::endl;
+                    if (king_in_checkmate) {
+                        std::cout << "The white king is in checkmate" << std::endl;
+                        return make_pair(true, true);
+                    }
                 } else {
                     std::cout << "The black king is in check!" << std::endl;
-                    if (king_in_checkmate) std::cout << "The black king is in checkmate" << std::endl;
+                    if (king_in_checkmate) {
+                        std::cout << "The black king is in checkmate" << std::endl;
+                        return make_pair(true, true);
+                    }
                 }
             }
             // Update promotion if needed
             game->getBoardModifiable()->pawnGettingPromoted(!isWhiteTurn);
-            return true;
+            return make_pair(true, false);
         }
-        return false;
+        return make_pair(false, false);
     }
 
     // If not a random move, find the best move as usual
@@ -320,12 +332,12 @@ bool Player::computer3Move(Game* game, Board& board, bool isWhiteTurn) {
         }
         // Update promotion if needed
         game->getBoardModifiable()->pawnGettingPromoted(!isWhiteTurn);
-        return true;
+        return make_pair(true, false);
     }
-    return false;
+    return make_pair(false, false);
 }
 
-bool Player::computer4Move(Game* game, Board& board, bool isWhiteTurn) {
+pair<bool, bool> Player::computer4Move(Game* game, Board& board, bool isWhiteTurn) {
     static std::vector<std::pair<std::pair<int, int>, std::pair<int, int>>> white_opening_moves = {
         {{6, 4}, {4, 4}}, // e2 to e4
         {{7, 6}, {5, 5}}, // g1 to f3
@@ -344,8 +356,7 @@ bool Player::computer4Move(Game* game, Board& board, bool isWhiteTurn) {
     std::vector<Move> possible_moves = board.getPossibleMoves(isWhiteTurn);
 
     if (possible_moves.empty()) {
-        std::cout << "No way it's empty" << std::endl;
-        return false; // No valid moves
+        return make_pair(false, false);
     }
 
     // Seed the random number generator
@@ -419,17 +430,23 @@ bool Player::computer4Move(Game* game, Board& board, bool isWhiteTurn) {
             king_in_checkmate = game->getBoard().isCheckmate(isWhiteTurn);
             if (isWhiteTurn) {
                 std::cout << "The white king is in check!" << std::endl;
-                if (king_in_checkmate) std::cout << "The white king is in checkmate" << std::endl;
+                if (king_in_checkmate) {
+                    std::cout << "The white king is in checkmate" << std::endl;
+                    return make_pair(true, true);
+                }
             } else {
                 std::cout << "The black king is in check!" << std::endl;
-                if (king_in_checkmate) std::cout << "The black king is in checkmate" << std::endl;
+                if (king_in_checkmate) {
+                    std::cout << "The black king is in checkmate" << std::endl;
+                    return make_pair(true, true);
+                }
             }
         }
         // Update promotion if needed
         game->getBoardModifiable()->pawnGettingPromoted(!isWhiteTurn);
-        return true;
+        return make_pair(true, false);
     }
-    return false;
+    return make_pair(false, false);
 }
 
 int Player::evaluateMove(const Board& board, const Move& move) {

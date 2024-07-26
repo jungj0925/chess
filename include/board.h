@@ -38,7 +38,7 @@ class Board : public Subject {
           ~Board();
           void setUp();
           void movePiece(Move& move);
-          void placePiece(char piece, string position) const;
+          void placePiece(char piece, string position);
           void removePiece(string position) const;
           bool isCheck(bool isWhiteTurn) const;
 

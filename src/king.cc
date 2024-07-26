@@ -206,17 +206,11 @@ pair<bool, bool> King::isCurrentMoveCastling(pair<int, int> old_position, Square
      int old_x = old_position.first;
      int new_x = new_coords.first;
 
-     // cout << "OLD: " << "[" << old_x << ", " << old_y << "]" << endl;
-     // cout << "NEW: " << "[" << new_x << ", " << new_y << "]" << endl;
-
      bool queenside_possible = isCastlingPossible(the_board).first;
      bool kingside_possible = isCastlingPossible(the_board).second;
 
      bool current_move_queenside = (new_x - old_x == -2);
      bool current_move_kingside = (new_x - old_x == 2);
-
-     // cout << "Current Move Kingside: " << current_move_kingside << endl;
-     // cout << "Kingside Possible: " << kingside_possible << endl;
 
      return make_pair(queenside_possible && current_move_queenside, kingside_possible && current_move_kingside);
 }

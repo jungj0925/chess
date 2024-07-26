@@ -112,6 +112,7 @@ int main() {
                     manual_setup = true;
                     game = new Game("human", "human", manual_setup);
                     (*game->getBoardModifiable()).attach(new TextObserver(game->getBoardModifiable()));
+                    // (*game->getBoardModifiable()).attach(new GraphicsObserver(game->getBoardModifiable()));
                     string setupCommand;
                     bool whiteKingPlaced = false;
                     bool blackKingPlaced = false;
@@ -157,7 +158,7 @@ int main() {
                                    continue;
                               }
 
-                              game->getBoard().placePiece(piece, position);
+                              game->getBoard2().placePiece(piece, position);
                               game->getBoard().display();
                          }
 
@@ -200,9 +201,7 @@ int main() {
 
      if (game != nullptr) {
           delete game;
+          game = nullptr;
      }
-
-     delete game;
-
      return 0;
 }

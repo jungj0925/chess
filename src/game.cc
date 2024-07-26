@@ -63,7 +63,6 @@ bool Game::makeMove(Move& move) {
     Square* to_square;
     pair<int, int> from_coordinates;
     pair<int, int> to_coordinates;
-    cout << "In MoveMove" << endl;
 
     if (move.getStartingCoord() == nullptr) {
         from_coordinates = move.getFromCoordinates();
@@ -80,7 +79,6 @@ bool Game::makeMove(Move& move) {
 
     if (!piece) {
         cout << "Piece does NOT exixt" << endl;
-        cout << "(" << from_coordinates.first << ", " << from_coordinates.second << endl;
     }
 
     if (piece && piece->validMove(*to_square, *board)) {

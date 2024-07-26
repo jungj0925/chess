@@ -9,17 +9,6 @@ Bishop::Bishop(Square *current_position, const string& colour, const char symbol
 
 void Bishop::move(Square* new_position, const Board& the_board) {
           // Check for validity
-     // if (!validMove(*new_position, the_board)) {
-     //      cout << "This is not a valid move" << endl;
-     //      return;
-     // }
-
-     // Capturing Pieces
-     // if (new_position->getPiece() != nullptr && 
-     //      islower(new_position->getPiece()->getSymbol()) != islower(symbol)) {
-     //      new_position->removePiece(); // Remove the piece being captured
-     // }
-
      // Set the position of the piece to the new position provided
      the_board.getSquare(new_position->getCoordinates().first, new_position->getCoordinates().second).setPiece(this);
      
