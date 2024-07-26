@@ -133,6 +133,7 @@ bool Player::computer1Move(Game* game, Board& board, bool isWhiteTurn) {
     // }
 
     // Select a random move
+    std::srand(std::time(nullptr));
     Move move = possible_moves[rand() % possible_moves.size()];
 
     cout << "chosen move:" << endl;
@@ -185,6 +186,7 @@ bool Player::computer2Move(Game* game, Board& board, bool isWhiteTurn) {
         std::cout << "No way it's empty" << std::endl;
         return false; // No valid moves
     }
+    std::srand(std::time(nullptr));
 
     Move move = possible_moves[rand() % possible_moves.size()]; // Initialize with a random move
 
